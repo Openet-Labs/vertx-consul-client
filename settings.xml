@@ -16,7 +16,7 @@
     <server>
         <id>snapshots</id>
 	<username>${artifactory.username}</username>
-	<password>${artifactory.password</password>
+	<password>${artifactory.password}</password>
     </server>
   </servers>
 
