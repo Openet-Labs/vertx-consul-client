@@ -765,6 +765,30 @@ Set list of nodes
 +++
 |===
 
+[[NodeOptions]]
+== NodeOptions
+
+++++
+ Options used to register service in catalog.
+++++
+'''
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[address]]`@address`|`String`|-
+|[[checkOptions]]`@checkOptions`|`link:dataobjects.html#CheckOptions[CheckOptions]`|-
+|[[datacenter]]`@datacenter`|`String`|-
+|[[id]]`@id`|`String`|+++
+Set the ID of session
++++
+|[[node]]`@node`|`String`|-
+|[[nodeMeta]]`@nodeMeta`|`String`|-
+|[[serviceOptions]]`@serviceOptions`|`link:dataobjects.html#ServiceOptions[ServiceOptions]`|-
+|[[taggedAddresses]]`@taggedAddresses`|`String`|-
+|===
+
 [[NodeQueryOptions]]
 == NodeQueryOptions
 

@@ -738,4 +738,52 @@ public class ConsulClientImpl implements ConsulClient {
     });
   }
 
+	@Override
+	public ConsulClient registerCatalogService(NodeOptions nodeOptions, Handler<AsyncResult<Void>> resultHandler) {
+		JsonObject nodeJsonOpts = new JsonObject()
+	  	      .put("Node", nodeOptions.getNode())
+	  	      .put("Address", nodeOptions.getAddress());
+		if(nodeOptions.getId() != null)
+			nodeJsonOpts.put("ID", nodeOptions.getId());
+		if(nodeOptions.getTaggedAddresses() != null)
+			nodeJsonOpts.put("TaggedAddresses", nodeOptions.getTaggedAddresses());
+		if(nodeOptions.getDatacenter() != null)
+			nodeJsonOpts.put("Datacenter", nodeOptions.getDatacenter());
+		if(nodeOptions.getNodeMeta() != null)
+			nodeJsonOpts.put("NodeMeta", nodeOptions.getNodeMeta());
+
+	
+	    if (nodeOptions.getCheckOptions() != null) {
+	    	nodeJsonOpts.put("Check", checkOpts(nodeOptions.getCheckOptions(), "CheckID", false));
+	    }
+	
+		
+		ServiceOptions serviceOptions = nodeOptions.getServiceOptions();
+		if(serviceOptions != null) {
+		    JsonObject serviceJsonOpts = new JsonObject()
+		    	      .put("ID", serviceOptions.getId())
+		    	      .put("Service", serviceOptions.getName())
+		    	      .put("Tags", serviceOptions.getTags())
+		    	      .put("Address", serviceOptions.getAddress())
+		    	      .put("Port", serviceOptions.getPort())
+		    	      .put("Meta", serviceOptions.getMeta());
+		    
+		    nodeJsonOpts.put("Service", serviceJsonOpts);
+		}
+	    requestVoid(HttpMethod.PUT, "/v1/catalog/register", null, nodeJsonOpts.encode(), resultHandler);
+	    return this;
+	}
+	
+	@Override
+	public ConsulClient deregisterCatalogService(String nodeId, String serviceId, String checkId,
+			Handler<AsyncResult<Void>> resultHandler) {
+		JsonObject jsonOpts = new JsonObject()
+				.put("Node", nodeId)
+				.put("ServiceID", serviceId);
+		if(checkId != null)
+			jsonOpts.put("CheckID", checkId);
+	    requestVoid(HttpMethod.PUT, "/v1/catalog/deregister", null, jsonOpts.encode(), resultHandler);
+	    return this;
+	}
+
 }

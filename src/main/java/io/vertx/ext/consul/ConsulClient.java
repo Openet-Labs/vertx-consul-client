@@ -905,6 +905,12 @@ public interface ConsulClient {
   @Fluent
   ConsulClient executePreparedQueryWithOptions(String query, PreparedQueryExecuteOptions options, Handler<AsyncResult<PreparedQueryExecuteResponse>> resultHandler);
 
+  @Fluent
+  ConsulClient registerCatalogService(NodeOptions nodeOptions, Handler<AsyncResult<Void>> resultHandler);
+
+  @Fluent
+  ConsulClient deregisterCatalogService(String nodeId, String serviceId, String checkId, Handler<AsyncResult<Void>> resultHandler);
+
   /**
    * Close the client and release its resources
    */
