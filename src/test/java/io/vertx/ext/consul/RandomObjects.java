@@ -86,8 +86,7 @@ public class RandomObjects {
   public static Node randomNode() {
     return new Node()
       .setName(randomAlphaString(10))
-      .setLanAddress(randomAlphaString(10))
-      .setWanAddress(randomAlphaString(10))
+      .setTaggedAddresses(randomTaggedAddresses())
       .setAddress(randomAlphaString(10));
   }
 
@@ -167,11 +166,22 @@ public class RandomObjects {
       .setPort(randomPortInt());
   }
 
+  public static Node randomNode(UUID uuid, String datacenterName) {
+    return new Node()
+      .setId(uuid.toString())
+      .setName(randomAlphaString(10))
+      .setAddress(randomIpV4())
+      .setTaggedAddresses(randomTaggedAddresses())
+      .setDatacenter(datacenterName)
+      .setNodeMeta(randomMeta())
+      ;
+  }
+
   public static Map<String, String> randomMeta() {
-    Map<String, String> meta = new HashMap<>();
-    meta.put(randomAlphaString(10), randomAlphaString(10));
-    meta.put(randomAlphaString(10), randomAlphaString(10));
-    return meta;
+    Map<String, String> map = new HashMap<>();
+    map.put(randomAlphaString(10), randomAlphaString(10));
+    map.put(randomAlphaString(10), randomAlphaString(10));
+    return map;
   }
 
   public static List<String> randomStringList(int n) {
@@ -185,4 +195,21 @@ public class RandomObjects {
     }
     return list;
   }
+
+  private static Map<String, String> randomTaggedAddresses() {
+    return new HashMap<String, String>(){
+      {
+        put("lan", randomIpV4());
+        put("wan", randomIpV4());
+        put("lan_ipv4", randomIpV4());
+        put("wan_ipv4", randomIpV4());
+      }
+    };
+  }
+
+  private static String randomIpV4() {
+    Random r = new Random();
+    return r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256) + "." + r.nextInt(256);
+  }
+
 }

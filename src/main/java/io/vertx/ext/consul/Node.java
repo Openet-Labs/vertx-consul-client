@@ -18,16 +18,21 @@ package io.vertx.ext.consul;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 
+import java.util.Map;
+import java.util.Objects;
+
 /**
  * @author <a href="mailto:ruslan.sennov@gmail.com">Ruslan Sennov</a>
  */
 @DataObject(generateConverter = true)
 public class Node {
 
+  private String id;
   private String node;
   private String address;
-  private String lanAddress;
-  private String wanAddress;
+  private Map<String, String> taggedAddresses;
+  private String datacenter;
+  private Map<String, String> nodeMeta;
 
   /**
    * Default constructor
@@ -40,10 +45,12 @@ public class Node {
    * @param other the one to copy
    */
   public Node(Node other) {
+    this.id = other.id;
     this.node = other.node;
     this.address = other.address;
-    this.lanAddress = other.lanAddress;
-    this.wanAddress = other.wanAddress;
+    this.taggedAddresses = other.taggedAddresses;
+    this.datacenter = other.datacenter;
+    this.nodeMeta = other.nodeMeta;
   }
 
   /**
@@ -67,6 +74,15 @@ public class Node {
   }
 
   /**
+   * Get node id
+   *
+   * @return node id
+   */
+  public String getId() {
+    return id;
+  }
+
+  /**
    * Get node name
    *
    * @return node name
@@ -85,21 +101,39 @@ public class Node {
   }
 
   /**
-   * Get node lan address
+   * Get node tagged addresses
    *
-   * @return node lan address
+   * @return node tagged addresses
    */
-  public String getLanAddress() {
-    return lanAddress;
+  public Map<String, String> getTaggedAddresses() {
+    return taggedAddresses;
   }
 
   /**
-   * Get node wan address
+   * Get node datacenter
    *
-   * @return node wan address
+   * @return node datacenter
    */
-  public String getWanAddress() {
-    return wanAddress;
+  public String getDatacenter() { return datacenter; }
+
+  /**
+   * Get node meta
+   *
+   * @return node meta
+   */
+  public Map<String, String> getNodeMeta() {
+    return nodeMeta;
+  }
+
+  /**
+   * Set node id
+   *
+   * @param id node id
+   * @return reference to this, for fluency
+   */
+  public Node setId(String id) {
+    this.id = id;
+    return this;
   }
 
   /**
@@ -125,24 +159,35 @@ public class Node {
   }
 
   /**
-   * Set node lan address
+   * Set node tagged addresses
    *
-   * @param lanAddress node lan address
+   * @param taggedAddresses node tagged addresses
    * @return reference to this, for fluency
    */
-  public Node setLanAddress(String lanAddress) {
-    this.lanAddress = lanAddress;
+  public Node setTaggedAddresses(Map<String, String> taggedAddresses) {
+    this.taggedAddresses = taggedAddresses;
     return this;
   }
 
   /**
-   * Set node wan address
+   * Set node datacenter
    *
-   * @param wanAddress node wan address
+   * @param datacenter node datacenter
    * @return reference to this, for fluency
    */
-  public Node setWanAddress(String wanAddress) {
-    this.wanAddress = wanAddress;
+  public Node setDatacenter(String datacenter) {
+    this.datacenter = datacenter;
+    return this;
+  }
+
+  /**
+   * Set node meta
+   *
+   * @param nodeMeta node nodeMeta
+   * @return reference to this, for fluency
+   */
+  public Node setNodeMeta(Map<String, String> nodeMeta) {
+    this.nodeMeta = nodeMeta;
     return this;
   }
 
@@ -153,18 +198,22 @@ public class Node {
 
     Node node1 = (Node) o;
 
-    if (node != null ? !node.equals(node1.node) : node1.node != null) return false;
-    if (address != null ? !address.equals(node1.address) : node1.address != null) return false;
-    if (lanAddress != null ? !lanAddress.equals(node1.lanAddress) : node1.lanAddress != null) return false;
-    return wanAddress != null ? wanAddress.equals(node1.wanAddress) : node1.wanAddress == null;
+    if (!Objects.equals(id, node1.id)) return false;
+    if (!Objects.equals(node, node1.node)) return false;
+    if (!Objects.equals(address, node1.address)) return false;
+    if (!Objects.equals(taggedAddresses, node1.taggedAddresses)) return false;
+    if (!Objects.equals(datacenter, node1.datacenter)) return false;
+    return Objects.equals(nodeMeta, node1.nodeMeta);
   }
 
   @Override
   public int hashCode() {
-    int result = node != null ? node.hashCode() : 0;
+    int result = id != null ? id.hashCode() : 0;
+    result = 31 * result + (node != null ? node.hashCode() : 0);
     result = 31 * result + (address != null ? address.hashCode() : 0);
-    result = 31 * result + (lanAddress != null ? lanAddress.hashCode() : 0);
-    result = 31 * result + (wanAddress != null ? wanAddress.hashCode() : 0);
+    result = 31 * result + (taggedAddresses != null ? taggedAddresses.hashCode() : 0);
+    result = 31 * result + (datacenter != null ? datacenter.hashCode() : 0);
+    result = 31 * result + (nodeMeta != null ? nodeMeta.hashCode() : 0);
     return result;
   }
 }

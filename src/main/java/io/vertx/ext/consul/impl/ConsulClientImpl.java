@@ -1272,4 +1272,60 @@ public class ConsulClientImpl implements ConsulClient {
     }
   }
 
+  @Override
+  public ConsulClient registerCatalogService(Node nodeOptions,
+                                             ServiceOptions serviceOptions, Handler<AsyncResult<Void>> resultHandler) {
+    JsonObject nodeJsonOpts = new JsonObject()
+      .put("Node", nodeOptions.getName())
+      .put("Address", nodeOptions.getAddress());
+    if(notEmptyString(nodeOptions.getId())) {
+      nodeJsonOpts.put("ID", nodeOptions.getId());
+    }
+
+    if (nodeOptions.getTaggedAddresses() != null && !nodeOptions.getTaggedAddresses().isEmpty()) {
+      nodeJsonOpts.put("TaggedAddresses", nodeOptions.getTaggedAddresses());
+    }
+    if(notEmptyString(nodeOptions.getDatacenter())) {
+      nodeJsonOpts.put("Datacenter", nodeOptions.getDatacenter());
+    }
+    if(nodeOptions.getNodeMeta() != null && !nodeOptions.getNodeMeta().isEmpty())
+      nodeJsonOpts.put("NodeMeta", nodeOptions.getNodeMeta());
+
+    if(serviceOptions != null) {
+      JsonObject serviceJsonOpts = new JsonObject()
+        .put("ID", serviceOptions.getId())
+        .put("Service", serviceOptions.getName())
+        .put("Tags", serviceOptions.getTags())
+        .put("Address", serviceOptions.getAddress())
+        .put("Port", serviceOptions.getPort())
+        .put("Meta", serviceOptions.getMeta());
+
+      nodeJsonOpts.put("Service", serviceJsonOpts);
+    }
+
+    Map<String, Object> map = nodeJsonOpts.getMap();
+    for (Map.Entry<String, Object> entry : map.entrySet()) {
+      if (entry.getValue() == null) {
+        map.remove(entry.getKey());
+      }
+    }
+
+    requestVoid(HttpMethod.PUT, "/v1/catalog/register", null, nodeJsonOpts.encode(), resultHandler);
+    return this;
+  }
+
+  private boolean notEmptyString(String str) {
+    return str != null && !str.isEmpty();
+  }
+
+  @Override
+  public ConsulClient deregisterCatalogService(String nodeName, String serviceId,
+                                               Handler<AsyncResult<Void>> resultHandler) {
+    JsonObject jsonOpts = new JsonObject()
+      .put("Node", nodeName)
+      .put("ServiceID", serviceId);
+    requestVoid(HttpMethod.PUT, "/v1/catalog/deregister", null, jsonOpts.encode(), resultHandler);
+    return this;
+  }
+
 }
